@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: meeting_be_pgsql_db
+    env_file:
+      - .env.db
+    ports:
+      - "5432:5432"
+    volumes:
+      - meeting_be_pg_data:/var/lib/postgresql/data
+
+volumes:
+  meeting_be_pg_data:
