@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ERole } from '../types/enums/role.enum';
 import { TimestampEntity } from './common/timestamp.abstract.entity';
+import { RoomEntity } from './room.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -21,6 +22,9 @@ export class UserEntity {
 
   @Column({ unique: true })
   email: string;
+
+  @OneToMany(() => RoomEntity, (room) => room.owner)
+  rooms: RoomEntity[];
 
   @Column(() => TimestampEntity, { prefix: false })
   timestamp: TimestampEntity;
