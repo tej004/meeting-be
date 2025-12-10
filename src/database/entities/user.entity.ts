@@ -7,6 +7,15 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
+  @Column({ type: 'varchar', length: 150 })
+  firstName: string;
+
+  @Column({ type: 'varchar', length: 150 })
+  lastName: string;
+
+  @Column({ type: 'varchar', length: 150 })
+  username: string;
+
   @Column({ type: 'enum', enum: ERole, default: ERole.USER })
   role: ERole = ERole.USER;
 
