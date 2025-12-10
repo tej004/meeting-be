@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { TimestampEntity } from './common/timestamp.abstract.entity';
 import { UserEntity } from './user.entity';
 
@@ -11,7 +17,11 @@ export class RoomEntity {
   name: string;
 
   @ManyToOne(() => UserEntity, (user) => user.rooms, { nullable: false })
+  @JoinColumn({ name: 'ownerId' })
   owner: UserEntity;
+
+  @Column({ type: 'uuid' })
+  ownerId: string;
 
   @Column(() => TimestampEntity, { prefix: false })
   timestamp: TimestampEntity;
