@@ -5,6 +5,7 @@ import {
 } from '@nestjs/config';
 import databaseConfig from './configs/database.config';
 import redisConfig from './configs/redis.config';
+import encryptionConfig from './configs/encryption.config';
 
 @Global()
 @Module({
@@ -12,7 +13,7 @@ import redisConfig from './configs/redis.config';
     NestConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
-      load: [databaseConfig, redisConfig],
+      load: [databaseConfig, redisConfig, encryptionConfig],
       envFilePath: ['.env.local', '.env'],
     }),
   ],

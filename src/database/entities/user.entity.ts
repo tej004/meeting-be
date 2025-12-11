@@ -23,6 +23,9 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
+  @Column({ type: 'varchar', length: 255 })
+  password: string;
+
   @OneToMany(() => RoomEntity, (room) => room.owner)
   rooms: RoomEntity[];
 
