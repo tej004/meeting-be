@@ -10,7 +10,7 @@ import {
   Length,
 } from 'class-validator';
 
-export class BaseUserDto {
+export class BaseUserRequestDto {
   @ApiProperty({ example: 'John' })
   @IsString()
   @IsNotEmpty()
