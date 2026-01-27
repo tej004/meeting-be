@@ -61,4 +61,18 @@ export class RoomController {
       HttpStatus.OK
     );
   }
+
+  @Post(ROOM_ROUTES.CREATE_ROOM_TOKEN)
+  @UseGuards(JwtAuthGuard)
+  async createRoomToken(
+    @Body('roomId') roomId: string,
+    @AuthenticatedUser() user: UserEntity
+  ): Promise<StandardApiResponse<{ tempKey: string }>> {
+    const result = await this.roomService.createRoomToken(roomId, user.uuid);
+    return new StandardApiResponse(
+      'Temporary key generated',
+      result,
+      HttpStatus.CREATED
+    );
+  }
 }

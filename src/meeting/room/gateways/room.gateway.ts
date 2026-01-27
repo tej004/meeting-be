@@ -7,8 +7,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { ROOM_GATEWAY_ROUTE_NAME } from '../constants/routes/room-gateway.routes';
 
-@WebSocketGateway({ namespace: 'room', cors: { origin: '*' } })
+@WebSocketGateway({ namespace: ROOM_GATEWAY_ROUTE_NAME, cors: { origin: '*' } })
 export class RoomGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
@@ -23,7 +24,7 @@ export class RoomGateway
 
   handleConnection(client: Socket) {
     console.log(
-      `Client connected: ${(client as any)?.user?.uuid} - email: ${(client as any)?.user?.email}`,
+      `Client connected: ${(client as any).data?.user?.uuid} - role: ${(client as any).data?.user?.role}`
     );
   }
 

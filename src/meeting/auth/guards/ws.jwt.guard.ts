@@ -19,9 +19,8 @@ export class WsJwtGuard {
     }
 
     const payload = this.jwtService.verify(token);
-    console.log('WebSocket connection authorized for user:', payload);
 
-    (client as any).user = payload.data;
+    (client as any).data.user = payload.data;
     return !!payload;
   }
 

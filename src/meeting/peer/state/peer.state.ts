@@ -7,7 +7,8 @@ import { Socket } from 'socket.io';
 import { EPeerRole } from '../types/enums/peer-role.enum';
 
 export default class PeerState extends EventEmitter {
-  id: string;
+  id: string; // socket id
+  uuid: string; // generate uuid
   name: string;
   role: EPeerRole;
   joined: boolean;
@@ -21,9 +22,16 @@ export default class PeerState extends EventEmitter {
   producers: Map<string, Producer>;
   rtpCapabilities: any | null; /// clients rtpc from the fe or can be accessed after device.load()
 
-  constructor(id: string, name: string, socket: Socket, rtpCapabilities: any) {
+  constructor(
+    id: string,
+    uuid: string,
+    name: string,
+    socket: Socket,
+    rtpCapabilities: any
+  ) {
     super();
     this.id = id;
+    this.uuid = uuid;
     this.name = name;
     this.role = EPeerRole.PARTICIPANT;
     this.socket = socket;
@@ -39,7 +47,7 @@ export default class PeerState extends EventEmitter {
 
   public async createTransport(
     type: 'recv' | 'send',
-    router: Router,
+    router: Router
   ): Promise<WebRtcTransport> {
     if (type === 'send' && this.sendTransport !== null) {
       return this.sendTransport;

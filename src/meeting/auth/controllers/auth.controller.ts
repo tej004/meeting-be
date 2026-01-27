@@ -1,4 +1,13 @@
-import { Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  HttpStatus,
+  Post,
+  UseGuards,
+  Req,
+  Request,
+  Body,
+} from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from '../services/auth.service';
 import { UserEntity } from '@/database/entities/user.entity';
 import { LocalAuthGuard } from '../guards/local.guard';
@@ -7,6 +16,9 @@ import { AuthenticatedUser } from '../decorator/authenticated-user.decorator';
 import { StandardApiResponse } from '@/config/common/response';
 import { LoginResponseDto } from '../dtos/responses/login-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { ViewerLocalGuard } from '../guards/viewer-local.guard';
+import { LoginViewerRequestDto } from '../dtos/requests/login-viewer-request.dto';
+import { LoginViewerResponseDto } from '../dtos/responses/login-viewer-response.dto';
 
 @Controller(AUTH_ROUTE_NAME)
 export class AuthController {
@@ -15,7 +27,7 @@ export class AuthController {
   @Post(AUTH_ROUTES.LOGIN)
   @UseGuards(LocalAuthGuard)
   async login(
-    @AuthenticatedUser() user: UserEntity,
+    @AuthenticatedUser() user: UserEntity
   ): Promise<StandardApiResponse<LoginResponseDto>> {
     const loginResult = await this.authService.login(user);
 
@@ -24,7 +36,26 @@ export class AuthController {
       plainToInstance(LoginResponseDto, loginResult, {
         excludeExtraneousValues: true,
       }),
-      HttpStatus.CREATED,
+      HttpStatus.CREATED
+    );
+  }
+
+  @Post(AUTH_ROUTES.LOGIN_VIEWER)
+  @UseGuards(ViewerLocalGuard)
+  async loginViewer(
+    @Body() body: LoginViewerRequestDto
+  ): Promise<StandardApiResponse<LoginViewerResponseDto>> {
+    const name = body.name;
+    const roomId = body.roomId;
+    const result = await this.authService.loginViewer(name, roomId);
+
+    return new StandardApiResponse(
+      'Login as a viewer successful',
+      {
+        accessToken: result.accessToken,
+        user: result.user,
+      },
+      HttpStatus.CREATED
     );
   }
 }

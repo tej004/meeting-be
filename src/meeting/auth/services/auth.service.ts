@@ -3,6 +3,7 @@ import { BaseUserResponseDto } from '@/meeting/user/dtos/responses/base-user-res
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { plainToInstance } from 'class-transformer';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AuthService {
@@ -18,5 +19,16 @@ export class AuthService {
     });
 
     return { accessToken, user: userDto };
+  }
+
+  async loginViewer(
+    name: string,
+    roomId: string
+  ): Promise<{ accessToken: string; user: any }> {
+    const uuid = uuidv4();
+    const viewer = { uuid, name, role: 'viewer', requestedRoomId: roomId };
+    const payload = { data: viewer };
+    const accessToken = this.jwtService.sign(payload);
+    return { accessToken, user: viewer };
   }
 }

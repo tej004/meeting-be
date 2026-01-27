@@ -1,11 +1,21 @@
 import { WorkerService } from '@/meeting/worker/services/worker.service';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import RoomState from '../state/room.state';
 import { Repository } from 'typeorm';
 import { RoomEntity } from '@/database/entities/room.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateRoomRequestDto } from '../dtos/requests/create-room-request.dto';
 import { ROOM_STATE_EVENTS } from '../constants/state/room-event.state';
+import { generateRandomKey } from '../helper/generate-random-key.helper';
+import { REDIS_CLIENT } from '@/redis/constants/redis-client.constant';
+import Redis from 'ioredis';
+import { ROOM_TEMP_KEY } from '../constants/cache/room-temp-key.constant';
 
 @Injectable()
 export class RoomService {
@@ -14,7 +24,8 @@ export class RoomService {
   constructor(
     private readonly workerService: WorkerService,
     @InjectRepository(RoomEntity)
-    private readonly roomRepository: Repository<RoomEntity>
+    private readonly roomRepository: Repository<RoomEntity>,
+    @Inject(REDIS_CLIENT) private readonly redisClient: Redis
   ) {
     this.rooms = new Map();
   }
@@ -70,5 +81,25 @@ export class RoomService {
     return dbRecordRooms.filter((currentRoom: RoomEntity) =>
       this.isOpen(currentRoom.uuid)
     );
+  }
+
+  public async createRoomToken(
+    roomId: string,
+    userId: string
+  ): Promise<{ tempKey: string }> {
+    const room = await this.roomRepository.findOne({
+      where: { uuid: roomId, ownerId: userId },
+    });
+
+    if (!room || !this.isOpen(room.uuid)) {
+      throw new BadRequestException('Room is not active or does not exist');
+    }
+
+    const tempKey = generateRandomKey();
+    const redisKey = ROOM_TEMP_KEY(room.uuid, tempKey);
+
+    await this.redisClient.set(redisKey, userId, 'EX', 300);
+
+    return { tempKey };
   }
 }

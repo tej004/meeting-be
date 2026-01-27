@@ -22,4 +22,6 @@ export class UserController {
   ): Promise<BaseUserRequestDto | null> {
     return this.userService.findByEmail(user.email);
   }
+
+  
 }

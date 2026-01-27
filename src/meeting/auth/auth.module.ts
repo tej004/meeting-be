@@ -12,6 +12,8 @@ import { LocalAuthGuard } from './guards/local.guard';
 import { WsJwtGuard } from './guards/ws.jwt.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { ViewerJwtGuard } from './guards/viewer-jwt.guard';
+import { ViewerLocalGuard } from './guards/viewer-local.guard';
 
 @Module({
   imports: [
@@ -45,9 +47,18 @@ import { LocalStrategy } from './strategies/local.strategy';
     JwtAuthGuard,
     LocalAuthGuard,
     WsJwtGuard,
+    ViewerJwtGuard,
+    ViewerLocalGuard,
     JwtStrategy,
     LocalStrategy,
   ],
-  exports: [JwtModule, EncryptionService, AuthService, WsJwtGuard],
+  exports: [
+    JwtModule,
+    EncryptionService,
+    AuthService,
+    WsJwtGuard,
+    ViewerLocalGuard,
+    ViewerJwtGuard,
+  ],
 })
 export class AuthModule {}
