@@ -9,5 +9,6 @@ import { RoomGateway } from './gateways/room.gateway';
   imports: [WorkerModule, AuthModule],
   providers: [RoomService, RoomGateway],
   controllers: [RoomController],
+  exports: [RoomService],
 })
 export class RoomModule {}

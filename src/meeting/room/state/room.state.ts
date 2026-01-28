@@ -1,13 +1,14 @@
 import { EventEmitter } from 'events';
 import { Router } from 'mediasoup/node/lib/RouterTypes';
 import { ROOM_STATE_EVENTS } from '../constants/state/room-event.state';
+import PeerState from '@/meeting/peer/state/peer.state';
 
 export default class RoomState extends EventEmitter {
   id: string;
   name: string;
   router: Router;
   autoAccept: boolean;
-  peers: Map<string, any>;
+  peers: Map<string, PeerState>;
 
   constructor(id: string, name: string, router: Router, autoAccept = false) {
     super();

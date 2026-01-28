@@ -13,12 +13,12 @@ import { UserEntity } from '@/database/entities/user.entity';
 import { LocalAuthGuard } from '../guards/local.guard';
 import { AUTH_ROUTE_NAME, AUTH_ROUTES } from '../constants/routes/auth.routes';
 import { AuthenticatedUser } from '../decorator/authenticated-user.decorator';
-import { StandardApiResponse } from '@/config/common/response';
 import { LoginResponseDto } from '../dtos/responses/login-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { ViewerLocalGuard } from '../guards/viewer-local.guard';
 import { LoginViewerRequestDto } from '../dtos/requests/login-viewer-request.dto';
 import { LoginViewerResponseDto } from '../dtos/responses/login-viewer-response.dto';
+import { StandardApiResponse } from '@/meeting/common/response/response';
 
 @Controller(AUTH_ROUTE_NAME)
 export class AuthController {

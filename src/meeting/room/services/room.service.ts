@@ -43,6 +43,10 @@ export class RoomService {
     room.destroy();
   }
 
+  public findRoomState(id: string): RoomState | undefined {
+    return this.rooms.get(id);
+  }
+
   public async createRoom(
     createRoomDto: CreateRoomRequestDto,
     userId: string
@@ -68,7 +72,7 @@ export class RoomService {
     return roomInstance;
   }
 
-  public findAllRoomsByOwnerId(ownerId: string): Promise<RoomEntity[] | []> {
+  public findAllRooms(ownerId: string): Promise<RoomEntity[] | []> {
     if (!ownerId) throw new NotFoundException('Owner ID is required.');
     return this.roomRepository.find({
       where: { ownerId: ownerId },
@@ -76,7 +80,7 @@ export class RoomService {
   }
 
   public async findActiveRooms(ownerId: string): Promise<RoomEntity[]> {
-    const dbRecordRooms = await this.findAllRoomsByOwnerId(ownerId);
+    const dbRecordRooms = await this.findAllRooms(ownerId);
 
     return dbRecordRooms.filter((currentRoom: RoomEntity) =>
       this.isOpen(currentRoom.uuid)

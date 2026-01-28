@@ -5,4 +5,5 @@ export const ROOM_ROUTES = {
   JOIN_ROOM_AS_HOST: 'join-room-as-host',
   JOIN_ROOM_AS_VIEWER: 'join-room-as-viewer',
   CREATE_ROOM_TOKEN: 'create-room-token',
+  UUID_STATUS: ':uuid/status',
 } as const;

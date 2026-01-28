@@ -1,4 +1,5 @@
 import { UserEntity } from '@/database/entities/user.entity';
+import { ERoomRole } from '@/meeting/common/enums/room-role.enum';
 import { BaseUserResponseDto } from '@/meeting/user/dtos/responses/base-user-response.dto';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -26,7 +27,12 @@ export class AuthService {
     roomId: string
   ): Promise<{ accessToken: string; user: any }> {
     const uuid = uuidv4();
-    const viewer = { uuid, name, role: 'viewer', requestedRoomId: roomId };
+    const viewer = {
+      uuid,
+      name,
+      role: ERoomRole.VIEWER,
+      requestedRoomId: roomId,
+    };
     const payload = { data: viewer };
     const accessToken = this.jwtService.sign(payload);
     return { accessToken, user: viewer };

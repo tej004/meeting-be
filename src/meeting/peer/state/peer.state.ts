@@ -5,6 +5,7 @@ import { Producer, Router } from 'mediasoup/node/lib/types';
 import { WebRtcTransport } from 'mediasoup/node/lib/WebRtcTransportTypes';
 import { Socket } from 'socket.io';
 import { EPeerRole } from '../types/enums/peer-role.enum';
+import { ETransportType } from '@/meeting/common/enums/transport.enum';
 
 export default class PeerState extends EventEmitter {
   id: string; // socket id
@@ -46,12 +47,12 @@ export default class PeerState extends EventEmitter {
   }
 
   public async createTransport(
-    type: 'recv' | 'send',
+    type: ETransportType,
     router: Router
   ): Promise<WebRtcTransport> {
-    if (type === 'send' && this.sendTransport !== null) {
+    if (type === ETransportType.SEND && this.sendTransport !== null) {
       return this.sendTransport;
-    } else if (type === 'recv' && this.recvTransport !== null) {
+    } else if (type === ETransportType.RECV && this.recvTransport !== null) {
       return this.recvTransport;
     }
 
@@ -71,7 +72,7 @@ export default class PeerState extends EventEmitter {
       preferUdp: true,
     });
 
-    if (type === 'send') {
+    if (type === ETransportType.SEND) {
       this.sendTransport = transport;
     } else {
       this.recvTransport = transport;
